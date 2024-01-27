@@ -1,0 +1,34 @@
+export interface IssueRegister {
+    issueRegisterId: number;
+    itemStoreId: number;
+    departmentNameId: number;
+    itemDetailId:number;
+    issueStatusId: number;
+    trainingCrewId:number;
+    totalReceivedQty:number;
+    surveyStatus:number;
+    surveyNumber:string;
+    surveyDate:Date;
+    surveyAuthorityId:number;
+    surveyItemTypeId:number;
+    byWhom:string;
+    issueQty: number;
+    issueDate:Date;
+    issuedTo:string;
+    issueTypeId:number;
+    reason: string;
+    isRefundable: boolean;
+    availableQtyBeforeIssue:number;
+    availableQtyAfterIssue:number;
+    demandCompleteStatus:number;
+    receivedPerson:string;
+    remarks:string;
+    status:number;
+    isActive: boolean;
+    returnQty:number;
+    partNO:any;
+    itemName:any;
+    toolsLocation:any;
+    itemCategoryId:any;
+    equipmentNameId:any;
+}

@@ -1,0 +1,389 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">{{pageTitle}}</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main">
+                <i class="fas fa-home"></i> </a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Demand</a>
+            </li>
+            <li class="breadcrumb-item active">{{destination}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="DemandForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+
+                <div *ngIf="role != userRole.User" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Department</mat-label>
+                    <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()"
+                      required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('departmentNameId').hasError('required')">
+                      Department  is Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Item Category</mat-label>
+                    <mat-select formControlName="itemCategoryId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option (onSelectionChange)="onSpareCategorySelectionChange($event)" *ngFor="let dropdown of selectedItemCategory" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('itemCategoryId').hasError('required')">
+                      Department  is Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Patt/Model or IMC</mat-label>
+                    <mat-select formControlName="pattorimc" (selectionChange)="onPattOrModelSelectionChange()" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option value="1">Patt/Model</mat-option>
+                      <mat-option value="2">IMC</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('pattorimc').hasError('required')">
+                      Department  is Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="showPattOrModelDropdown" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Patt No</mat-label>
+                    <input formControlName="part" matInput type="text" [matAutocomplete]="auto" required/>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let item of filteredOptions" [value]="item"
+                        (onSelectionChange)="onTraineeSelectionChanged(item)">
+                        {{item.text}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="showIMC" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>IMC</mat-label>
+                    <input formControlName="imc" matInput type="text" [matAutocomplete]="auto" required/>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let item of filteredOptions" [value]="item"
+                        (onSelectionChange)="onImcSelectionChange(item)">
+                        {{item.text}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <h5 class="m-t-20">Item Name : <span class="c-color">{{itemValue}}</span> </h5>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <h5 class="m-t-20">Equipment Name : <span class="c-color">{{equipmentName}}</span> </h5>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <h5 class="m-t-20">IMC : <span class="c-color">{{selectedImc}}</span> </h5>
+                </div>
+
+           
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Item Type</mat-label>
+                    <mat-select formControlName="demandTypeId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option *ngFor="let dropdown of selectedTypeOfDemandValue" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('demandTypeId').hasError('required')">
+                      Type Of Demand is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Authority</mat-label>
+                    <mat-select formControlName="authorityId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option (onSelectionChange)="onSurvey($event)" *ngFor="let dropdown of selectedAuthority" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('authorityId').hasError('required')">
+                      Authority is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Ref No</mat-label>
+                    <input matInput formControlName="refPoNo" required>
+                    <mat-error *ngIf="DemandForm.get('refPoNo').hasError('required')">
+                      Ref No is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Demand No</mat-label>
+                    <input matInput formControlName="demandNo" required>
+                    <mat-error *ngIf="DemandForm.get('demandNo').hasError('required')">
+                      Demand No is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Demand Date</mat-label>
+                    <input  matInput [matDatepicker]="datepicker" min="{{this.minDate | date: 'yyyy-MM-dd'}}" formControlName="demandDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker></mat-datepicker>
+                    <mat-error *ngIf="DemandForm.get('demandDate').hasError('required')">
+                      Demand Date is required
+                    </mat-error>
+                  </mat-form-field>
+                </div> -->
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Demand Date</mat-label>
+                    <input  matInput [matDatepicker]="datepicker" formControlName="demandDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker></mat-datepicker>
+                    <mat-error *ngIf="DemandForm.get('demandDate').hasError('required')">
+                      Demand Date is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Group Name</mat-label>
+                    <mat-select formControlName="groupId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option *ngFor="let dropdown of selectedGroupName" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('groupId').hasError('required')">
+                      Supplier is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Spec</mat-label>
+                    <ngx-mat-file-input (change)="onFileChanged($event)"
+                      accept=".txt,.pdf,.xls,.xlsx,.doc,.docx,.ppt,.pptx">
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>attachment</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Deno </mat-label>
+                    <mat-select formControlName="denoId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option *ngFor="let dropdown of selectedDeno" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DemandForm.get('denoId').hasError('required')">
+                      Deno is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Qty</mat-label>
+                    <input matInput formControlName="demandQty" required>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="survey==2" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Survey No </mat-label>
+                    <mat-select formControlName="surveyId" >
+
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option *ngFor="let dropdown of selectedSurveyNo" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="DemandForm.get('issueRegisterId').hasError('required')">
+                      Survey No is required
+                    </mat-error> -->
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Survey No</mat-label>
+                    <input matInput formControlName="surveyNo" required>
+                    <mat-error *ngIf="DemandForm.get('surveyNo').hasError('required')">
+                      Survey No is required
+                    </mat-error>
+                  </mat-form-field>
+                </div> -->
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Name of Demandee</mat-label>
+                    <input matInput formControlName="nameOfDemandee" required>
+                    <mat-error *ngIf="DemandForm.get('nameOfDemandee').hasError('required')">
+                      Name Of Demandee is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+            
+
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                  <mat-label>Status</mat-label>
+                  <mat-select formControlName="itemStatusId" required>
+                    <mat-option value="0">--Select--</mat-option>
+                    <mat-option *ngFor="let dropdown of selectedItemStatus" [value]="dropdown.value">
+                      {{dropdown.text}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="DemandForm.get('itemStatusId').hasError('required')">
+                    Supplier is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                  <mat-label>Remarks</mat-label>
+                  <input matInput formControlName="remarks">
+                </mat-form-field>
+              </div>
+            </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" [disabled]="!DemandForm.valid " mat-raised-button
+                    color="primary">{{btnText}}</button>
+                </div>
+              </div>
+            </form>
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <ul class="header-buttons-left ml-0">
+                      
+                      <li class="dropdown">
+                        <input placeholder="Search" type="text" [(ngModel)]="searchText"  #filter class="browser-default search-field"
+                          aria-label="Search box">
+                      </li>
+                      <li>
+                        <div class="icon-button-demo m-l-10">
+                          <button mat-mini-fab (click)="applyFilter(searchText)" color="accent">
+                            <mat-icon class="col-white">search</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <ul class="header-buttons-left ml-0">
+                      <li><h3 class="text-center table-title"> Demand List</h3></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="container">               
+                <table class="table  tbl-by-group">
+                  <thead>
+                    <tr>
+                      <th class="course-name-col"><h5>Equipment Name</h5></th>
+                      <th class="course-name-col"><h5>Item Name</h5></th>
+                      <th class="course-name-col"><h5>Deno</h5></th>
+                      <th class="cl-mrk"><h5>Qty</h5></th>
+                      <th class="cl-mrk"><h5>Demand Date </h5></th>
+                      <th class="cl-mrk"><h5>Authority</h5></th>
+                      <th class="cl-mrk"><h5>Status</h5></th>
+                      <th class="cl-mrk"><h5>Spec</h5></th>
+                      <th class="cl-mrk-rmrk"><h5>Actions</h5></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let data of groupArrays;let i= index;">
+                      <tr>
+                        <td class="cl-srl" [attr.rowspan]="data.courses.length + 1">{{data.equipmentName}}</td>
+                      </tr>
+                      <tr *ngFor="let number of data.courses;">
+                        <td>
+                          {{number.itemName}}
+                        </td>
+                        <td>
+                          {{number.deno}}
+                        </td>
+                        <td>
+                          {{number.demandQty}}
+                        </td>
+                        <td>
+                          {{number.demandDate |  date:'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                          {{number.demandAuthority}}
+                        </td>
+                        <td>
+                          {{number.itemStatus}}
+                        </td>
+                        <td>
+                          <mat-lebel *ngIf="number.specDoc"><a target="_blank" [href]="number.specDoc"><mat-icon>picture_as_pdf</mat-icon></a></mat-lebel>
+                        </td>                       
+                        <td>
+                          <button mat-icon-button color="accent" title="Edit" class="btn-custom btn-tbl-edit" 
+                           [routerLink]="['/spares-management/update-demand', number.demandId]">
+                            <mat-icon aria-label="Edit" class="col-white">edit</mat-icon>
+                          </button>
+
+                          <button mat-icon-button color="accent" title="Delete" class="btn-tbl-delete btn-custom" (click)="$event.stopPropagation()"
+                            (click)="deleteItem(number)">
+                            <mat-icon aria-label="Delete" class="col-white">delete</mat-icon> 
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+                <mat-paginator [length]="paging.length" [showFirstLastButtons]="masterData.paging.showFirstLastButtons"
+                  [pageSize]="paging.pageSize" [pageSizeOptions]="masterData.paging.pageSizeOptions"
+                  (page)="pageChanged($event)">
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

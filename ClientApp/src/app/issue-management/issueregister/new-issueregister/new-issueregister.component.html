@@ -1,0 +1,408 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">{{pageTitle}}</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Issue Register</a>
+            </li>
+            <li class="breadcrumb-item active">{{destination}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="IssueRegisterForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+
+                <div class="row">
+
+                  <div *ngIf="role != userRole.User" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Department</mat-label>
+                      <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()"
+                        required>
+                        <mat-option value="0">--Select--</mat-option>
+                        <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                          {{dropdown.text}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="IssueRegisterForm.get('departmentNameId').hasError('required')">
+                        Department  is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+  
+                  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Item Category</mat-label>
+                      <mat-select formControlName="itemCategoryId" required>
+                        <mat-option value="0">--Select--</mat-option>
+                        <mat-option (onSelectionChange)="onSpareCategorySelectionChange($event)" *ngFor="let dropdown of selectedItemCategory" [value]="dropdown.value">
+                          {{dropdown.text}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="IssueRegisterForm.get('itemCategoryId').hasError('required')">
+                        Item Category  is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+  
+                  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Patt/Model or IMC</mat-label>
+                      <mat-select formControlName="pattorimc" (selectionChange)="onPattOrModelSelectionChange()" required>
+                        <mat-option value="0">--Select--</mat-option>
+                        <mat-option value="1">Patt/Model</mat-option>
+                        <mat-option value="2">IMC</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="IssueRegisterForm.get('pattorimc').hasError('required')">
+                        Department  is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div *ngIf="showPattOrModelDropdown"  class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Patt No</mat-label>
+                      <input formControlName="part" matInput type="text" [matAutocomplete]="auto" required/>
+                      <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let item of filteredOptions" [value]="item"
+                          (onSelectionChange)="onTraineeSelectionChanged(item)">
+                          {{item.text}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="showIMC" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>IMC</mat-label>
+                      <input formControlName="imc" matInput type="text" [matAutocomplete]="auto" required/>
+                      <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let item of filteredOptions" [value]="item"
+                          (onSelectionChange)="onImcSelectionChange(item)">
+                          {{item.text}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    </div>
+                  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <h5 class="m-t-20">Item Name : <span class="c-color">{{itemValue}}</span> </h5>
+                  </div>
+
+                  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <h5 class="m-t-20">Equipment Name : <span class="c-color">{{equipmentName}}</span> </h5>
+                  </div>
+                <!-- Basic Table -->
+                <div *ngIf="isShown && itemCategoryId !==1" class="row clearfix">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 ex-mrk-entry-li">
+                    <div class="card">
+
+                      <div class="body table-responsive">
+                        <table class="table ex-mrk-entry issue-res">
+                          <thead>
+                            <tr>
+                              <th class="cl-srl">
+                                <h5>Ser</h5>
+                              </th>                         
+
+                              <th class="cl-mrk">
+                                <h5>Item Receive Date </h5>
+                              </th>
+
+                              <th class="cl-mrk">
+                                <h5>Date of Expire</h5>
+                              </th>
+                              <th class="cl-mrk">
+                                <h5>Purchased Qty</h5>
+                              </th>
+                              <th class="cl-mrk">
+                                <h5>Available Qty</h5>
+                              </th>
+                              
+                              <th class="cl-nm-rnk">
+                                <h5>Issued QTY</h5>
+                              </th>
+
+                              <th class="cl-nm-rnk">
+                                <h5>Location</h5>
+                              </th>
+                              <th class="cl-nm-rnk">
+                                <h5>Issue Type</h5>
+                              </th>
+                              
+                              <th class="cl-nm-rnk">
+                                <h5>Status</h5>
+                              </th>
+                           
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let unit of IssueRegisterForm.get('ItemStoreList')['controls']; let i = index"
+                              [formGroup]="unit">
+                              <th class="cl-srl" scope="row">{{i+1}}</th>
+                              <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'itemReceivedDate')| date:'dd/MMM/yyyy'}}
+                              </td>
+                              <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'dateOfExpiry')| date:'dd/MMM/yyyy'}}
+                              </td>
+                              <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'storeQty')}} 
+                              </td>
+                              <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'availableQty')}}
+                              </td>
+                              <!-- <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'issuedQty')}}
+                              </td> -->
+                              <td class="cl-mrk custom">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                  <input  matInput type="text" formControlName="issuedQty" (change)="OnTextCheck($event.target.value, i,'availableQty')"/>
+                                </mat-form-field>
+                              </td>
+                              <td class="cl-nm-rnk">
+                                {{getControlLabel(i,'toolsLocation')}}
+                              </td>
+                              <!-- <td class="cl-mrk-rmrk">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                  <mat-select formControlName="toolsLocationId">
+                                    <mat-option  value="">--Select--</mat-option >
+                                    <mat-option *ngFor="let dropdown of selectedToolsLocation" [value]="dropdown.value">
+                                      {{dropdown.text}} 
+                                    </mat-option>                          
+                                  </mat-select>
+                                </mat-form-field>    
+                              </td> -->
+
+                              <td class="cl-mrk-rmrk custom">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                  <mat-select formControlName="issueTypeId">
+                                    <mat-option  value="">--Select--</mat-option >
+                                    <mat-option *ngFor="let dropdown of selectedIssueType" [value]="dropdown.value">
+                                      {{dropdown.text}} 
+                                    </mat-option>                          
+                                  </mat-select>
+                                </mat-form-field>    
+                              </td>
+                          
+                              <td class="cl-mrk">
+                                <input type="checkbox" formControlName="isChecked" #checkBox
+                                  [(ngModel)]="unit.isChecked" (change)="onCheckboxChange($event,unit)"
+                                  [ngClass]="'tbl-checkbox'">
+                              </td>                             
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+                      <h5 class="availableQty">Total Available Qty : <span class="c-color">{{this.totalAvailableQty}}</span> </h5>
+                   </div>
+                  </div>
+                 
+
+                  <div class="row" *ngIf="isDynamicFormShown">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Issue Date</mat-label>
+                        <input matInput [matDatepicker]="dateOfTenderFloatpicker" formControlName="issueDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="dateOfTenderFloatpicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateOfTenderFloatpicker></mat-datepicker>
+                        <mat-error *ngIf="IssueRegisterForm.get('issueDate').hasError('required')">
+                          Issue Date is Required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Issued To</mat-label>
+                        <input matInput formControlName="issuedTo" required>
+                        <mat-error *ngIf="IssueRegisterForm.get('issuedTo').hasError('required')">
+                          Issue Date is Required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Issued By</mat-label>
+                        <input matInput formControlName="issuedBy" required>
+                        <mat-error *ngIf="IssueRegisterForm.get('issuedBy').hasError('required')">
+                          Issue Date is Required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Remarks</mat-label>
+                        <input matInput formControlName="remarks">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+
+                   <!-- Basic Table  for Equipment-->
+                   <div *ngIf="isShownForEquipment && itemCategoryId ===1" class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 ex-mrk-entry-li">
+                      <div class="card">
+  
+                        <div class="body table-responsive">
+                          <table class="table ex-mrk-entry issue-res">
+                            <thead>
+                              <tr>
+                                <th class="cl-srl">
+                                  <h5>Ser</h5>
+                                </th>                         
+  
+                                <th class="cl-mrk">
+                                  <h5>Item Receive Date </h5>
+                                </th>
+  
+                                <th class="cl-mrk">
+                                  <h5>Date of Expire</h5>
+                                </th>
+                                <th class="cl-mrk">
+                                  <h5>Purchased Qty</h5>
+                                </th>
+                                <th class="cl-mrk">
+                                  <h5>Available Qty</h5>
+                                </th>
+                                
+                                <th class="cl-nm-rnk">
+                                  <h5>Issued QTY</h5>
+                                </th>
+  
+                                <th class="cl-nm-rnk">
+                                  <h5>Location</h5>
+                                </th>
+                                <th class="cl-nm-rnk">
+                                  <h5>Issue Type</h5>
+                                </th>
+                                
+                                <th class="cl-nm-rnk">
+                                  <h5>Status</h5>
+                                </th>
+                             
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let unit of IssueRegisterForm.get('ItemStoreList')['controls']; let i = index"
+                                [formGroup]="unit">
+                                <th class="cl-srl" scope="row">{{i+1}}</th>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'itemReceivedDate')|  date:'dd/MM/yyyy'}}
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'dateOfExpiry')|  date:'dd/MM/yyyy'}}
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'storeQty')}} 
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'availableQty')}}
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'issuedQty')}}
+                                </td>
+  
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'toolsLocation')}}
+                                </td>
+
+                                <td class="cl-mrk-rmrk custom">
+                                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                    <mat-select formControlName="issueTypeId">
+                                      <mat-option  value="">--Select--</mat-option >
+                                      <mat-option *ngFor="let dropdown of selectedIssueType" [value]="dropdown.value">
+                                        {{dropdown.text}} 
+                                      </mat-option>                          
+                                    </mat-select>
+                                  </mat-form-field>    
+                                </td>
+                            
+                                <td class="cl-mrk">
+                                  <input type="checkbox" formControlName="isChecked" #checkBox
+                                    [(ngModel)]="unit.isChecked" (change)="onCheckboxChange($event,unit)"
+                                    [ngClass]="'tbl-checkbox'">
+                                </td>                             
+                              </tr>  
+                            </tbody>
+                          </table>                              
+                        </div>                      
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+                        <h5 class="availableQty">Total Available Qty : <span class="c-color">{{this.totalAvailableQty}}</span> </h5>
+                     </div>
+                    </div>
+  
+                    <div class="row" *ngIf="isDynamicFormShown">
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                          <mat-label>Issue Date</mat-label>
+                          <input matInput [matDatepicker]="dateOfTenderFloatpicker" formControlName="issueDate" required>
+                          <mat-datepicker-toggle matSuffix [for]="dateOfTenderFloatpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #dateOfTenderFloatpicker></mat-datepicker>
+                          <mat-error *ngIf="IssueRegisterForm.get('issueDate').hasError('required')">
+                            Issue Date is Required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                  
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                          <mat-label>Issued To</mat-label>
+                          <input matInput formControlName="issuedTo" required>
+                          <mat-error *ngIf="IssueRegisterForm.get('issuedTo').hasError('required')">
+                            Issue Date is Required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                          <mat-label>Issued By</mat-label>
+                          <input matInput formControlName="issuedBy" required>
+                          <mat-error *ngIf="IssueRegisterForm.get('issuedBy').hasError('required')">
+                            Issue Date is Required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                        <mat-form-field class="example-full-width mb-3" appearance="outline">
+                          <mat-label>Remarks</mat-label>
+                          <input matInput formControlName="remarks">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" [disabled]="!IssueRegisterForm.valid " mat-raised-button
+                    color="primary">{{btnText}}</button>
+                </div>
+              </div>
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

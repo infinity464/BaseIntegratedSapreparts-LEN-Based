@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Submarine_23.08.22\Publish</_PublishTargetUrl>
+    <History>True|2022-08-27T11:53:07.6078843Z;True|2022-08-25T19:52:05.9309781+06:00;True|2022-08-25T14:49:41.3680749+06:00;True|2022-08-25T11:36:04.5085738+06:00;True|2022-08-24T11:47:46.8302851+06:00;True|2022-08-21T19:45:18.4111934+06:00;True|2022-07-21T18:37:39.2171851+06:00;True|2022-07-19T18:12:10.8750839+06:00;True|2021-12-19T09:07:42.7462261+06:00;True|2021-12-18T11:37:07.7719179+06:00;</History>
+    <_PublishTargetUrl>D:\Submarine_23.08.22\Publish</_PublishTargetUrl>
+    <History>True|2022-09-05T14:24:21.3663801Z;True|2022-08-27T19:02:13.2471340+06:00;True|2022-08-25T19:52:05.9309781+06:00;True|2022-08-25T14:49:41.3680749+06:00;True|2022-08-25T11:36:04.5085738+06:00;True|2022-08-24T11:47:46.8302851+06:00;True|2022-08-21T19:45:18.4111934+06:00;True|2022-07-21T18:37:39.2171851+06:00;True|2022-07-19T18:12:10.8750839+06:00;True|2021-12-19T09:07:42.7462261+06:00;True|2021-12-18T11:37:07.7719179+06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,349 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<section class="content">
+  <div class="container-fluid">
+    <!-- Dashboard Group btn-->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="card usefullink">
+            <div class="body">
+              <form class="m-1" [formGroup]="DashboardForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Unit </mat-label>
+                      <mat-select formControlName="unitId" required (selectionChange)="getSelectedDepartmentName()">
+                        <mat-option value="0">--Select--</mat-option>
+                        <mat-option *ngFor="let dropdown of unitList" [value]="dropdown.value">
+                          {{dropdown.text}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="DashboardForm.get('unitId').hasError('required')">
+                        Unit is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>  
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Department</mat-label>
+                      <mat-select formControlName="departmentNameId"  >
+                        <mat-option value="0">--Select--</mat-option>
+                        <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                          {{dropdown.text}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="DashboardForm.get('departmentNameId').hasError('required')">
+                        Department  is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                    <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                  </div>
+                  <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 mb-2">
+                    
+                  </div> 
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Fiscal Year </mat-label>
+                      <mat-select formControlName="fiscalYearId" (selectionChange)="getDataByYear()">
+                        <mat-option value="0">--All--</mat-option>
+                        <mat-option  *ngFor="let dropdown of selectedFiscalYear" [value]="dropdown.value">
+                          {{dropdown.text}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="DashboardForm.get('fiscalYearId').hasError('required')">
+                        Unit is Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div> 
+                </div>
+              </form>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom first">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 heading">
+                   
+                    </div>
+                    <div class="col">
+                      <h5 class="equipmentState">Equipment State</h5>
+                      <div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 equip">
+                          <div class=" outer-bond navyblue-border">
+                            <div class="row inner-top navyblue">
+                              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <span class="title-count smaller">
+                                  {{equipmentOplCount}}
+                                </span>
+                                <p class="title-desc smaller">Opl</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 equip-non">
+                          <div class=" outer-bond navyblue-border">
+                            <div class="row inner-top navyblue bg-operational">
+                              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <span class="title-count smaller">
+                                  {{equipmentNonOplCount}}
+                                </span>
+                                <p class="title-desc smaller">Non-Opl</p>
+                              </div>
+                            </div>
+                            <div class="row inner-bottom ">
+                              <div>
+                                <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-equipementnonoplstate']">></a></span></p>
+                              </div>
+                              <div></div>
+                            </div>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
+                <div class="col">
+                  <h5 class="itemQty">Item Qty</h5>
+                  <div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 equipment">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue bg-nonoperational">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="title-count smaller">
+                              {{this.equipmentCount}}
+                            </span>
+                            <p class="title-desc smaller">Equipment</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 equipment">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue bglogistic">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="title-count smaller">
+                              {{ this.spareCount}}
+                            </span>
+                            <p class="title-desc smaller">Spare </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 equipment">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="title-count smaller">
+                             {{toolscount}}
+                            </span>
+                            <p class="title-desc smaller">Tools</p>
+                          </div>
+                        </div>
+                        <div class="row inner-bottom ">
+                          <div>
+                            <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-availableqty']">></a></span></p>
+                          </div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  
+   
+
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom second">
+                  <div class="row">
+                    <h5 class="sparemng">Spare Management</h5>
+               <div class="col">
+               
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 demand">
+                  <div class=" outer-bond navyblue-border">
+                    <div class="row inner-top navyblue bg-operational">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span class="title-count smaller">
+                        {{DemandsByParamsCount}}
+                        </span>
+                        <p class="title-desc smaller">Demand</p>
+                      </div>
+                    </div>
+                    <div class="row inner-bottom ">
+                      <div>
+                        <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-demands']">></a></span></p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 procurement">
+                  <div class=" outer-bond navyblue-border">
+                    <div class="row inner-top navyblue bg-nonoperational">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span class="title-count smaller">
+                        {{procurementCount}}
+                        </span>
+                        <p class="title-desc smaller">Procurement</p>
+                      </div>
+                    </div>
+                    <div class="row inner-bottom ">
+                      <div>
+                        <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-procurements']">></a></span></p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-6 sft">
+                  <div class=" outer-bond navyblue-border">
+                    <div class="row inner-top navyblue bglogistic">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span class="title-count smaller">
+                        {{sftcount}}
+                        </span>
+                        <p class="title-desc smaller">SFT</p>
+                      </div>
+                    </div>
+                    <div class="row inner-bottom ">
+                      <div>
+                        <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-sft']">></a></span></p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+
+               <div class="col">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 survey-pending">
+                  <div class=" outer-bond navyblue-border">
+                    <div class="row inner-top navyblue">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span class="title-count smaller">
+                        {{surveyCount}}
+                        </span>
+                        <p class="title-desc smaller">Survey Pending</p>
+                      </div>
+                    </div>
+                    <div class="row inner-bottom ">
+                      <div>
+                        <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-itemmoniotring']">></a></span></p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 issueItemTy">
+                  <div class=" outer-bond navyblue-border">
+                    <div class="row inner-top navyblue bg-operational">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <span class="title-count smaller">
+                        {{issuedItemTy}}
+                        </span>
+                        <p class="title-desc smaller">Issued Ty Item</p>
+                      </div>
+                    </div>
+                    <div class="row inner-bottom ">
+                      <div>
+                        <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-issueditem']">></a></span></p>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+                
+         
+             
+                 
+                  
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4  custom third">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 heading">
+                    </div>
+                  <div class="col">
+                    <h5 class="corrective">Corrective Maint.</h5>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 correctiveon">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue bg-nonoperational">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="title-count smaller">
+
+                            {{onGoingCorrectiveCount}}
+                            </span>
+                            <p class="title-desc smaller">On Going</p>
+                          </div>
+                        </div>
+                        <div class="row inner-bottom ">
+                          <div>
+                            <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-corrective']">></a></span></p>
+                          </div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                  <h5 class="schedulemaint">Schedule Maint.</h5>
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 correctivetotal">
+                    <div class=" outer-bond navyblue-border">
+                      <div class="row inner-top navyblue bglogistic">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                          <span class="title-count smaller">
+                          {{scheduleJobCountTotal}}
+                          </span>
+                          <p class="title-desc smaller">Total Job</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 correctivetotal">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue bglogistic">
+                          
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="title-count smaller">
+                            {{scheduleJobCount}}
+                            </span>
+                            <p class="title-desc smaller">Completed Job</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 correctivetotal">
+                      <div class=" outer-bond navyblue-border">
+                        <div class="row inner-top navyblue bglogistic">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <!-- <span *ngIf="this.scheduledMaintananceList.length==0"  class="title-count smaller">
+                              {{0}}
+                              </span> -->
+                            <span  class="title-count smaller">
+                            {{this.completedProgress|number:'1.2-2'}}%
+                            </span>
+                          
+                            <p class="title-desc smaller">Total Progress</p>
+                          </div>
+                        </div>
+                        <div class="row inner-bottom ">
+                          <div>
+                            <p class="btn-details navyblue-text">View Details<span class="clickable-btn"><a [routerLink]="['/monitoring/find-scheduledmaintenance']">></a></span></p>
+                          </div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

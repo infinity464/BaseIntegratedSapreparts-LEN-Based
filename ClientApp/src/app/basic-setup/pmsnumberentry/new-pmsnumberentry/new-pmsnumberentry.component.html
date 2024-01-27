@@ -1,0 +1,133 @@
+<section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style ">
+              <li class="breadcrumb-item">
+                <h4 class="page-title">{{pageTitle}}</h4>
+              </li>
+              <li class="breadcrumb-item bcrumb-1">
+                <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+              </li>
+              <li class="breadcrumb-item bcrumb-2">
+                <a href="#" onClick="return false;">PMS Number Entry</a>
+              </li>
+              <li class="breadcrumb-item active">{{destination}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="body">
+              <form class="m-4" [formGroup]="PmsNumberEntryForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+
+                  <div *ngIf="role != userRole.User" class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <mat-select formControlName="departmentNameId" required (selectionChange)="onDepartmentSelectionChangegetItemDetail()">
+                          <mat-option  value="0">--Select--</mat-option >
+                            <mat-option (onSelectionChange)="onDepartmentSelectionChange($event)" *ngFor="let code of selectedDepartmentNames" [value]="code.value">
+                                {{code.text}}
+                              </mat-option>                          
+                        </mat-select>
+                        <mat-error *ngIf="PmsNumberEntryForm.get('departmentNameId').hasError('required')">
+                            Select Any Department 
+                        </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Item Name</mat-label>
+                        <mat-select formControlName="itemDetailId" (selectionChange)="onItemSelectionChange()" required>
+                          <mat-option  value="0">--Select--</mat-option >
+                            <mat-option *ngFor="let code of selectedItemNames" [value]="code.value">
+                                {{code.text}}
+                              </mat-option>                          
+                        </mat-select>
+                        <mat-error *ngIf="PmsNumberEntryForm.get('itemDetailId').hasError('required')">
+                            Select Any Item Name 
+                        </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>PMS No</mat-label>
+                      <input matInput formControlName="pmsNo">
+                      <mat-error *ngIf="PmsNumberEntryForm.get('pmsNo').hasError('required')">
+                         PMS No  is REquired!
+                    </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  
+
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <button class="btn-space" [disabled]="!PmsNumberEntryForm.valid " mat-raised-button
+                      color="primary">{{btnText}}</button>
+                    <!-- <button type="button" mat-button routerLink="/basic-setup/maintenancesubcategory-list">Cancel</button> -->
+                  </div>
+                </div>
+              </form>
+              <div class="row create-table db-tbl cls-rtn">
+                  <h3 class="text-center table-title">PMS Number Entry List</h3>
+                  <div class="container">
+                    <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                      <ng-container matColumnDef="ser">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Ser. </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;"> {{ ((paging.pageIndex-1) *  paging.pageSize) + i+1}} </mat-cell>
+                      </ng-container> 
+                      <!-- <ng-container matColumnDef="departmentName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Department Name</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.departmentName}} </mat-cell>
+                      </ng-container>        
+                       -->
+                      <ng-container matColumnDef="itemName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Item Name </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.itemName}} </mat-cell>
+                      </ng-container>        
+                      <ng-container matColumnDef="pmsNo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> PMS No </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.pmsNo}} </mat-cell>
+                      </ng-container>
+                      
+                      
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef class="pr-0">Actions</mat-header-cell>
+                        <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                          <button mat-icon-button color="accent" class="btn-tbl-edit" 
+                          [routerLink]="['/basic-setup/update-pmsnumberentry', row.pmsNumberEntryId]">
+                            <mat-icon aria-label="Edit" class="col-white">edit</mat-icon>
+                          </button>
+                          <button mat-icon-button color="accent" class="btn-tbl-delete" (click)="$event.stopPropagation()"
+                            (click)="deleteItem(row)">
+                            <mat-icon aria-label="Delete" class="col-white">delete</mat-icon> 
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+                    
+                      
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                    <mat-paginator [length]="paging.length" [showFirstLastButtons]="masterData.paging.showFirstLastButtons"
+                  [pageSize]="paging.pageSize" [pageSizeOptions]="masterData.paging.pageSizeOptions"
+                  (page)="pageChanged($event)">
+                </mat-paginator>
+                  </div>
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

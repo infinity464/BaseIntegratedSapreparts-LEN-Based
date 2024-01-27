@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace SchoolManagement.Api.Models
+{
+    public partial class ProcurementType
+    {
+        public ProcurementType()
+        {
+            Procurements = new HashSet<Procurement>();
+        }
+
+        public int ProcurementTypeId { get; set; }
+        public string TypeName { get; set; }
+        public string Remarks { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string LastModifiedBy { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
+        public bool IsActive { get; set; }
+
+        public virtual ICollection<Procurement> Procurements { get; set; }
+    }
+}

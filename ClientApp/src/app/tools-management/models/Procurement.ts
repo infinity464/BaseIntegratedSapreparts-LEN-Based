@@ -1,0 +1,32 @@
+export interface Procurement {
+    procurementId: number;
+    demandId: number;
+    itemDetailId: number;
+    procurementStatusId: number;
+    principalNameId: number;
+    manufactureId:number;
+    localAgentId: number;
+    supplierId: number;
+    supplierAId: number;
+    supplierMId: number;
+    cstTecId: number;
+    partOfShipmentId: number;
+    sparesCategoryId:number;
+    departmentNameId: number;
+    tenderNumber: string;
+    dateOfTenderFloat: Date;
+    tenderopeningDate: Date;
+    tenderPublishDate: Date;
+    tenderNotice: string;
+    tenderSpecification: string;
+    financialApproval: string;
+    workOrder: string;
+    dateOfDelivery: Date;
+    unitPrice: string;
+    qty: string;
+    remarks: string;
+    procurementDocument: string;
+    status: number;
+    menuPosition: number;
+    isActive: boolean;   
+}

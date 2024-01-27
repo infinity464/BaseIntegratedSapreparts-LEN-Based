@@ -1,0 +1,261 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Available Stock</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Available Stock</a>
+            </li>
+            <!-- <li class="breadcrumb-item active">Find</li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="ItemDetailForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 mb-2">
+                  <div class="row">
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Unit </mat-label>
+                        <mat-select formControlName="unitId" required (selectionChange)="getSelectedDepartmentNameByUnitId()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of baseSchoolNameList" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('unitId').hasError('required')">
+                          Unit is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div *ngIf="role != userRole.User" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <mat-select formControlName="departmentNameId" >
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('departmentNameId').hasError('required')">
+                          Department  is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Item Category</mat-label>
+                        <mat-select formControlName="itemCategoryId"  (selectionChange)="onItemCategorySelectionChange()">
+                          <mat-option value="0">--Select--</mat-option>
+                          
+                          <mat-option   *ngFor="let dropdown of selectedItemCategory" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('itemCategoryId').hasError('required')">
+                          Item Category is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Equipment Name</mat-label>
+                        <mat-select formControlName="equipmentNameId">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                      <!-- <button type="button" mat-button routerLink="/spares-management/itemdetail-list">Cancel</button> -->
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> 
+                        <mat-icon class="col-white">print</mat-icon>
+                      </button> 
+                    </div>
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/main']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                    <div *ngIf="role == userRole.User" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/user-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                    <div *ngIf="role == userRole.Admin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/admin-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                  </div>                  
+                </div>
+               
+                                
+              </div>
+            </form>
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <h3 class="text-center table-title">Available Stock</h3>
+
+            
+              <div class="container">
+                <div *ngIf="isNoDataFound">
+                  <h3>No Data Found</h3>
+                </div>
+                <div id="print-routine">
+                 <table class="table table-striped tblbg">
+                  <thead>
+                    <tr>
+                      <th class="thbm"><h5>Ser</h5></th>
+                      <!-- <th class="thbm"><h5>Equipment Name</h5></th> -->
+                      <th class="thbm"><h5>Item Name</h5></th>
+                      <th class="thbm"><h5>Patt/Model</h5></th>
+                      <th class="thbm"><h5>IMC</h5></th>
+                      <th class="thbm"><h5>Deno</h5></th>
+                      <th class="thbm"><h5>Store Qty</h5></th>
+                      <th class="thbm"><h5>Ty. Qty</h5></th>
+                      <th class="thbm"><h5>Survey Qty</h5></th>
+                      <th class="thbm"><h5>Repair Qty</h5></th>
+                      <th class="thbm"><h5>Onboard Qty</h5></th>
+                      <th class="thbm"><h5>Min. Stock</h5></th>
+                      <!-- <th class="thbm"><h5>Location</h5></th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let data of AvailableQtyByParams;let i= index;">
+                     
+                      
+                      <tr >
+                        <td>
+                          {{ ((paging.pageIndex-1) * paging.pageSize) +
+                            i+1}}
+                        </td>
+                        <!-- <td>
+                          {{data.equipName}}
+                        </td> -->
+                        <td>
+                          {{data.nameOfItem}}
+                        </td>
+                        <td>
+                          {{data.partNo}}
+                        </td>
+                        <td >
+                          {{data.imcNumber}}
+                        </td>
+                        <td >
+                          {{data.denoName}}
+                        </td>
+                        <td >
+                          {{data.available}}
+                        </td>
+                        <td >
+                          {{data.tyqty}}
+                        </td>
+                        <td >
+                          {{data.surveyqty}}
+                        </td>
+                        <td >
+                          {{data.repairqty}}
+                        </td>
+                        <td >
+                          {{data.shipfittedQty}}
+                        </td>
+                        <td >
+                          {{data.minimumStock}}
+                        </td>
+                     
+                      
+                        
+                        <!-- <td >
+                          {{data.locationName}}
+                        </td> -->
+                        
+                      </tr>
+                    </ng-container>
+                    
+                  </tbody>
+                </table> 
+              </div>
+              <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 aircraftCount">
+                <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> Print
+                  <mat-icon class="col-white">print</mat-icon>
+                </button>
+              </div> -->
+                <!-- <mat-table #table [dataSource]="AvailableQtyByParams" matSort class="mat-cell">
+                  <ng-container matColumnDef="ser">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Ser. </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;"> {{ ((paging.pageIndex-1) * paging.pageSize) +
+                      i+1}} </mat-cell>
+                  </ng-container>
+                  <ng-container class="equipment" matColumnDef="equipmentName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Equipment Name</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.equipName}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="nameOfItem">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Item Name</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.nameOfItem}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="partNo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Patt/Model </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.partNo}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="imcNumber">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> IMC </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.imcNumber}} </mat-cell>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="deno">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Deno</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.denoName}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="availableQty">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Qty</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.available}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="minimumStock">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Min. Stock</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.minimumStock}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="locationName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Location </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.locationName}} </mat-cell>
+                  </ng-container>  -->
+
+                   <!-- <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef class="pr-0">Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                      <button mat-icon-button color="accent" class="btn-tbl-edit"
+                        [routerLink]="['/basic-setup/update-itemdetail', row.itemDetailId]">
+                        <mat-icon aria-label="Edit" class="col-white">edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="accent" class="btn-tbl-delete" (click)="$event.stopPropagation()"
+                        (click)="deleteItem(row)">
+                        <mat-icon aria-label="Delete" class="col-white">delete</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container> -->
+
+
+                 <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>   -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

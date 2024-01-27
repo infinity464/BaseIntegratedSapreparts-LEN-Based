@@ -1,0 +1,46 @@
+export interface Demand {
+ demandId: number,
+ authorityId: number,
+ tradeId:number,
+ itemDetailId: number,
+ partNo:string,
+ supplierId:number,
+ manufactureId:number,
+ itemCategory:any;
+ equipmentName:any;
+ denoId: number,
+ issueRegisterId:number;
+ dateOfExpiry:Date,
+ fiscalYearId: number,
+ itemCategoryId:number,
+ itemTypeId: number,
+ sparesCategoryId: number,
+ occasionOfDemandId: number,
+ demandAuthorityId: number,
+ demandTypeId: number,
+ demandDocId: number,
+ conditionOfItemId: number,
+ departmentNameId: number,
+ demandCompleteStatusId: number,
+ demandQty: string,
+ demandLetterNo: string,
+ specDoc:string;
+ demandNo:string;
+ demandDate: Date,
+ letterOuterNo: string,
+ refPrice: string,
+ refPoNo: string,
+ remarks: string,
+ oldPrice: string,
+ oldRefNo: string,
+ manufactureAddress: string,
+ status: number,
+ menuPosition: number,
+ isActive: boolean,
+ groupId:number,
+ itemStatusId:number,
+ nameOfDemandee:string,   
+ imcNo:string,
+ surveyNo:string,
+ equipmentNameId:number
+}

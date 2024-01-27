@@ -1,0 +1,122 @@
+﻿using static SchoolManagement.Shared.Constants;
+
+namespace SchoolManagement.Application
+{
+    public static class SMSRoutePrefix
+    {
+        private const string SMSRoutePrefixBase = ApiRoutePrefix.RoutePrefixBase + "sms/";
+
+        public const string AccountType = SMSRoutePrefixBase + "account-type";
+        public const string CstTec = SMSRoutePrefixBase + "cst-tec";
+        public const string FiscalYear = SMSRoutePrefixBase + "fiscal-year";
+        public const string Deno = SMSRoutePrefixBase + "deno";
+        public const string EquipmentName = SMSRoutePrefixBase + "equipment-name";
+        public const string Religion = SMSRoutePrefixBase + "religion";
+        public const string Caste = SMSRoutePrefixBase + "caste";
+        public const string Dashboard = SMSRoutePrefixBase + "dashboard";
+        public const string Division = SMSRoutePrefixBase + "division";
+        public const string District = SMSRoutePrefixBase + "district";
+        public const string Thana = SMSRoutePrefixBase + "thana";
+        public const string SpareRequiredEntry = SMSRoutePrefixBase + "spare-required-entry";
+        public const string JobDescriptionEntryPms = SMSRoutePrefixBase + "job-description-entry-pms";
+        public const string PmsNumberEntry = SMSRoutePrefixBase + "pms-number-entry";
+        public const string PreventiveMaintenance = SMSRoutePrefixBase + "preventive-maintenance";
+        public const string SurveyAuthority = SMSRoutePrefixBase + "survey-authority";
+        public const string SurveyItemType = SMSRoutePrefixBase + "survey-item-type";
+        public const string StatusOfJob = SMSRoutePrefixBase + "status-of-job";
+        public const string Priority = SMSRoutePrefixBase + "priority";
+        public const string JobCategory = SMSRoutePrefixBase + "job-category";
+        public const string Progres = SMSRoutePrefixBase + "progres";
+        public const string JobDescription = SMSRoutePrefixBase + "job-description";
+        public const string MaintenanceAuthority = SMSRoutePrefixBase + "maintenance-authority";
+        public const string CodeValues = SMSRoutePrefixBase + "code-value";
+        public const string CodeValueType = SMSRoutePrefixBase + "code-value-type";
+        public const string ItemType = SMSRoutePrefixBase + "item-type";
+        public const string ItemStatus = SMSRoutePrefixBase + "item-status";
+        public const string Supplier = SMSRoutePrefixBase + "suppliers";
+        public const string ConditionOfItem = SMSRoutePrefixBase + "condition-of-item";
+        public const string EndLifeType = SMSRoutePrefixBase + "endlife-type";
+        public const string ServiceLifeType = SMSRoutePrefixBase + "service-life-type"; 
+        public const string ItemCategory = SMSRoutePrefixBase + "item-category";
+        public const string ToolsType = SMSRoutePrefixBase + "tools-type"; 
+        public const string SparesCategory = SMSRoutePrefixBase + "spares-category";
+        public const string AcctStore = SMSRoutePrefixBase + "acct-store";
+        public const string BaseSchoolNames = SMSRoutePrefixBase + "base-School-name";
+        public const string AcStatus = SMSRoutePrefixBase + "ac-status"; 
+        public const string Course = SMSRoutePrefixBase + "course";
+        public const string Group = SMSRoutePrefixBase + "group";
+        public const string IssueType = SMSRoutePrefixBase + "issue-type";
+        public const string Opinion = SMSRoutePrefixBase + "opinion";
+        public const string ByWhom = SMSRoutePrefixBase + "by-whom";
+        public const string ProcurementType = SMSRoutePrefixBase + "procurement-type";
+        public const string DemandAuthority = SMSRoutePrefixBase + "demand-authority";
+        public const string ShelfLifeCategory = SMSRoutePrefixBase + "shelf-life-category";
+        public const string MaintenanceCategory = SMSRoutePrefixBase + "maintenance-category";
+        public const string Procurement = SMSRoutePrefixBase + "procurement";
+        public const string Manufacture = SMSRoutePrefixBase + "manufacture";
+        public const string LocalAgent = SMSRoutePrefixBase + "local-agent";
+        public const string GseMaintenance = SMSRoutePrefixBase + "gse-maintenance";
+        public const string GseScheduleWorkType = SMSRoutePrefixBase + "gse-schedule-work-type";
+        public const string GseMaintenanceScheduleName = SMSRoutePrefixBase + "gse-maintenance-schedule-name";
+        public const string GseItemName = SMSRoutePrefixBase + "gse-item-name";
+        public const string LifeLimitItem = SMSRoutePrefixBase + "life-limit-tem";
+        public const string LifeLimitItemRunningHour = SMSRoutePrefixBase + "life-limit-item-running-hour";
+        public const string ReminderType = SMSRoutePrefixBase + "reminder-type";
+        public const string Trade = SMSRoutePrefixBase + "trade";
+        public const string CallibrationState = SMSRoutePrefixBase + "callibration-state";
+        public const string MeaSquadronState = SMSRoutePrefixBase + "mea-squadron-state";
+        public const string PresentState = SMSRoutePrefixBase + "present-state";
+        public const string ItemDetail = SMSRoutePrefixBase + "item-detail";
+        public const string ItemInspection = SMSRoutePrefixBase + "item-inspection";
+        public const string Store = SMSRoutePrefixBase + "store";
+        public const string Rank = SMSRoutePrefixBase + "rank";
+        public const string OccasionOfDemand = SMSRoutePrefixBase + "occasion-of-demand";
+        public const string Authority = SMSRoutePrefixBase + "authority";
+        public const string DepartmentName = SMSRoutePrefixBase + "department-name";
+        public const string AirCraftName = SMSRoutePrefixBase + "air-craft-name";
+        public const string AirCraftFlying = SMSRoutePrefixBase + "air-craft-flying";
+        public const string RunningHour = SMSRoutePrefixBase + "running-hour";
+        public const string MaintenanceSubCategory = SMSRoutePrefixBase + "maintenance-sub-category";
+        public const string MaintenanceType = SMSRoutePrefixBase + "maintenance-type";
+        public const string DemandCompleteStatus = SMSRoutePrefixBase + "demand-complete-status"; 
+        public const string DemandDoc = SMSRoutePrefixBase + "demand-doc";
+        public const string Acceptance = SMSRoutePrefixBase + "acceptance"; 
+        public const string SourceOfSupply = SMSRoutePrefixBase + "source-of-supply";
+        public const string RetirementType = SMSRoutePrefixBase + "retirement-type";
+        public const string ProcurementStatus = SMSRoutePrefixBase + "procurement-status";
+        public const string PrincipalName = SMSRoutePrefixBase + "principal-name";
+        public const string PreviousItemStore = SMSRoutePrefixBase + "previous-item-store";
+        public const string PlaceOfDelivery = SMSRoutePrefixBase + "place-of-delivery";
+        public const string PartOfShipment = SMSRoutePrefixBase + "part-of-shipment";
+        public const string OverhaulingType = SMSRoutePrefixBase + "overhauling-type";
+        public const string OfficersStatus = SMSRoutePrefixBase + "officers-status";
+        public const string ItemCategoryType = SMSRoutePrefixBase + "item-category-type";
+        public const string DemandType = SMSRoutePrefixBase + "demand-type";
+        public const string Demand = SMSRoutePrefixBase + "demand";
+        public const string ItemStor = SMSRoutePrefixBase + "item-stor";
+        public const string IssueStatus = SMSRoutePrefixBase + "issue-status";
+        public const string IssueRegister = SMSRoutePrefixBase + "issue-register";
+        public const string MaintenancePlanning = SMSRoutePrefixBase + "maintenance-planning";
+        public const string MaintenanceSchedule = SMSRoutePrefixBase + "maintenance-schedule";
+        public const string TrainingCrew = SMSRoutePrefixBase + "training-crew";
+        public const string MaintenancePlanningStatus = SMSRoutePrefixBase + "maintenance-planningStatus";
+        public const string ToolsLocation = SMSRoutePrefixBase + "tools-location";
+        public const string ToolsBoxName = SMSRoutePrefixBase + "toolsbox-name";
+        public const string ReturnStatus = SMSRoutePrefixBase + "return-status";
+        public const string ReturnLog = SMSRoutePrefixBase + "return-log";
+        public const string SurveyItem = SMSRoutePrefixBase + "survey-item";
+        public const string CorrectiveMaintenence = SMSRoutePrefixBase + "corrective-maintenence";
+        public const string JobCategoryMaintenence = SMSRoutePrefixBase + "job-category-maintenence";
+        public const string ScheduleMaintenenceType = SMSRoutePrefixBase + "schedule-maintenence-type";
+        public const string JobDescriptionScheduleMaintenence = SMSRoutePrefixBase + "job-description-schedule-maintenence";
+        public const string ScheduleMaintenance = SMSRoutePrefixBase + "schedule-maintenance";
+        public const string SpareRequisition = SMSRoutePrefixBase + "spare-requisition";
+        public const string SpareRequiredStatus = SMSRoutePrefixBase + "spare-required-status";
+        public const string EquipmentPriority = SMSRoutePrefixBase + "equipment-priority";
+        public const string Survey = SMSRoutePrefixBase + "survey";
+        public const string UserManual = SMSRoutePrefixBase + "user-manual";
+
+    } 
+}
+
+ 

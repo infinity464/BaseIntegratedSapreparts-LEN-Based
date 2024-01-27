@@ -1,0 +1,238 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Schedule Maintenence</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Schedule Maintenence</a>
+            </li>
+            <li class="breadcrumb-item active"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="CorrectiveForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 mb-2">
+                  <div class="row">
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Unit </mat-label>
+                        <mat-select formControlName="unitId" required (selectionChange)="getSelectedDepartmentNameByUnitId()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of baseSchoolNameList" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CorrectiveForm.get('unitId').hasError('required')">
+                          Unit is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div *ngIf="role != userRole.User" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()"
+                          required>
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CorrectiveForm.get('departmentNameId').hasError('required')">
+                          Department  is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+    
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Equip Name</mat-label>
+                        <mat-select formControlName="issueRegisterId" >
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option  *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CorrectiveForm.get('issueRegisterId').hasError('required')">
+                          Equip Name  is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Type of Maintenance</mat-label>
+                        <mat-select formControlName="scheduleMaintenenceTypeId" >
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option  *ngFor="let dropdown of selectedMaintenenceType" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CorrectiveForm.get('scheduleMaintenenceTypeId').hasError('required')">
+                          Type of Maintenance  is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+    
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Year</mat-label>
+                        <mat-select formControlName="fiscalYearId" >
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option  *ngFor="let dropdown of selectedFiscalYear" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CorrectiveForm.get('fiscalYearId').hasError('required')">
+                          Year is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> 
+                        <mat-icon class="col-white">print</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+
+                
+              
+              </div>
+              
+            </form>
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 mb-2">
+                <h3 class="text-center table-title">Schedule Maintanance</h3>
+              </div>
+              <div *ngIf="role == userRole.SuperAdmin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                <button class="back" [routerLink]="['/admin/dashboard/main']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+              </div>
+              <div *ngIf="role == userRole.User" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                <button class="back" [routerLink]="['/admin/dashboard/user-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+              </div>
+              <div *ngIf="role == userRole.Admin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                <button class="back" [routerLink]="['/admin/dashboard/admin-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+              </div>
+              <!-- <h3 class="text-center table-title">Schedule Maintanance</h3> -->
+              <div class="container">
+                <div *ngIf="isNoDataFound">
+                  <h3>No Data Found</h3>
+                </div>
+                <div id="print-routine">
+                  <table class="table table-striped tblbg">
+                   <thead>
+                     <tr>
+                       <th class="thbm"><h5>Ser</h5></th>
+                       <th class="thbm"><h5>Job Description</h5></th>
+                       <th class="thbm"><h5> DR No</h5></th>
+                       <th class="thbm"><h5>By Whom</h5></th>
+                       <th class="thbm"><h5>Start Date </h5></th>
+                       <th class="thbm"><h5>Progress</h5></th>
+                       <th class="thbm"><h5> Complete Date</h5></th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <ng-container *ngFor="let data of scheduledMaintananceList;let i= index;">
+                      
+                       
+                       <tr >
+                         <td>
+                           {{ ((paging.pageIndex-1) * paging.pageSize) +
+                             i+1}}
+                         </td>
+                         <td>
+                           {{data.jobDescription }}
+                         </td>
+                         <td>
+                           {{data.drNo}}
+                         </td>
+                         <td>
+                           {{data.byWhomName}}
+                         </td>
+                         <td >
+                           {{data.startDate | date:'dd/MM/yyyy'}}
+                         </td>
+                         <td >
+                           {{data.progress}}
+                         </td>
+                         <td >
+                           {{data.completedDate | date:'dd/MM/yyyy'}}
+                         </td>
+                         
+                       </tr>
+                     </ng-container>
+                     
+                   </tbody>
+                 </table> 
+               </div>
+               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
+                <h2 class="availableQty">Total Progress : <span class="c-color">{{this.completedProgress|number:'1.2-2'}}%</span> </h2>
+              </div>
+                <!-- <mat-table #table [dataSource]="scheduledMaintananceList" matSort class="mat-cell">
+                  <ng-container matColumnDef="ser">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> SL. </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;"> {{ ((paging.pageIndex-1) * paging.pageSize) + i+1}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="jobDesc">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Job Description </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.jobDescription }} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="drNo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> DR No</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.drNo }} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="byWhom">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> By Whom </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.byWhomName}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="startDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.startDate | date:'mediumDate'}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="progress">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.progress}} </mat-cell>
+                  </ng-container>
+
+                  
+                  <ng-container matColumnDef="completeDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Complete Date</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.completedDate | date:'mediumDate'}} </mat-cell>
+                  </ng-container>
+
+
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+              
+                                    

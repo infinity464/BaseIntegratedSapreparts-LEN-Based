@@ -1,0 +1,215 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Preventive Maintenance</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Preventive Maintenance</a>
+            </li>
+            <!-- <li class="breadcrumb-item active">Find</li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="ItemDetailForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 mb-2">
+                  <div class="row">
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Unit </mat-label>
+                        <mat-select formControlName="unitId" required (selectionChange)="getSelectedDepartmentNameByUnitId()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of baseSchoolNameList" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('unitId').hasError('required')">
+                          Unit is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div *ngIf="role != userRole.User" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('departmentNameId').hasError('required')">
+                          Department  is Required!
+                        </mat-error>
+                      </mat-form-field> 
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Equipment Name</mat-label>
+                        <mat-select formControlName="itemDetailId" required (selectionChange)="onEquipmentNameSelectionChange()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of selectedItemName" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('itemDetailId').hasError('required')">
+                          Equipment name is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <h5 class="m-t-20">PMS No : <span class="c-color">{{this.pmsNo}}</span> </h5>
+                    </div> -->
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Category</mat-label>
+                        <mat-select formControlName="maintenanceTypeId"  required (selectionChange)="onCategorySelectionChange()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedCategory" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('maintenanceTypeId').hasError('required')">
+                          Category is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div> 
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Sub Category</mat-label>
+                        <mat-select formControlName="maintenanceCategoryId"  required>
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedSubCategory" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('maintenanceCategoryId').hasError('required')">
+                          Sub Category is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div> 
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                      <!-- <button type="button" mat-button routerLink="/spares-management/itemdetail-list">Cancel</button> -->
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> 
+                        <mat-icon class="col-white">print</mat-icon>
+                      </button> 
+                    </div>
+                    <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Equipment Name</mat-label>
+                        <mat-select formControlName="equipmentNameId">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div> -->
+                  </div>                  
+                </div>
+                
+                                
+              </div>
+            </form>
+
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <h3 class="text-center table-title">Preventive Maintenance List</h3>
+              <div class="container">
+                <div *ngIf="isNoDataFound">
+                  <h3>No Data Found</h3>
+                </div>
+                <div id="print-routine">
+                  <table class="table table-striped tblbg">
+                   <thead>
+                     <tr>
+                       <th class="thbm"><h5>Ser</h5></th>
+                       <th class="thbm"><h5>JIC</h5></th>
+                       <th class="thbm"><h5>Job Description</h5></th>
+                       <th class="thbm"><h5>By Whom</h5></th>
+                       <th class="thbm"><h5>Last Completed Date</h5></th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <ng-container *ngFor="let data of PreventiveList;let i= index;">
+                      
+                       
+                       <tr >
+                         <td>
+                           {{ ((paging.pageIndex-1) * paging.pageSize) +
+                             i+1}}
+                         </td>
+                         <td>
+                           {{data.jic}}
+                         </td>
+                         <td>
+                           {{data.jobDescription}}
+                         </td>
+                         <td>
+                           {{data.byWhomName}}
+                         </td>
+                         <td >
+                           {{data.completedDate | date:'dd/MM/yyyy'}}
+                         </td>
+                         
+                       </tr>
+                     </ng-container>
+                     
+                   </tbody>
+                 </table> 
+               </div>
+               <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 aircraftCount">
+                 <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> Print
+                   <mat-icon class="col-white">print</mat-icon>
+                 </button>
+               </div> -->
+                <!-- <mat-table #table [dataSource]="PreventiveList" matSort
+                class="mat-cell  db-tbl db-avl-qty-tbl content-center-align">
+                <ng-container matColumnDef="ser">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Ser. </mat-header-cell>
+                  <mat-cell *matCellDef="let element; let i = index;"> {{ ((paging.pageIndex-1) * paging.pageSize) +
+                    i+1}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="jic">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> JIC </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.jic}} </mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="jobDescription">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Job Description</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.jobDescription}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="byWhomName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> By Whom </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.byWhomName}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="completedDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Last Completed Date </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.completedDate1 |  date:'dd/MM/yyyy'}} </mat-cell>
+                </ng-container>
+                
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

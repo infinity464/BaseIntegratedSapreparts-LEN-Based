@@ -1,0 +1,58 @@
+export interface PreviousItemStore {
+    previousItemStoreId: number;
+    acceptanceId: number;
+    procurementId: number;
+    demandId:number;
+    itemDetailId:number;
+    toolsBoxNameId:number;
+    toolsLocationId:number;
+    toolsTypeId:number;
+    denoId: number;
+    departmentNameId: number;
+    itemCategoryId:number;
+    sparesCategoryId:number;
+    serviceLifeTypeId:number;
+    endLifeTypeId: number;
+    acctStoreId: number;
+    overhaulingTypeId:number;
+    retirementTypeId: number;
+    
+    itemSerNo:string;
+    icmNo:string;
+    shelfLife:string;
+    endShalfLife:string;
+    warrantyStartDate:Date;
+    warrantyEndDate:Date;
+    itemReceivedDate:Date;
+    totalReceivedQty:number;
+    availableQty:number;
+    issuedQty:number;
+    demandQty:string;
+    demandDate:Date;
+    letterOuterNo:string;
+    refPoNo:string;
+    tenderNumber:string;
+    dateOfTenderFloat:Date;
+    tenderopeningDate:Date;
+    tenderPublishDate:Date;
+    tenderNotice:string;
+    calibrationDate:Date;
+    nextCalibrationDate:Date;
+    location:string;
+    serviceLife:string;
+    endLifeTime:string;
+    accessories:string;
+    stockRegisterPageNo:string;
+    retirmentLife:string;
+    remarks:string;
+    arcDoc:string;
+    cofcDoc:string;
+    otherDoc:string;
+    oemDoc:string;
+    status:string;
+    isActive: boolean;
+    issueQty:string;
+    isRefundable: boolean;
+  //  denoId:
+   
+}

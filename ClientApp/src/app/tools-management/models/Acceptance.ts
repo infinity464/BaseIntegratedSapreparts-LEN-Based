@@ -1,0 +1,40 @@
+export interface Acceptance {
+    acceptanceId: number;
+    procurementId: number;
+    demandId: number;
+    itemDetailId:number;
+    departmentNameId: number;
+    sparesCategoryId:number;
+    procurementStatusId: number;
+    sourceOfSupplyId:number;
+    manufactureId:number;
+    principalNameId: number;
+    placeOfDeliveryId: number;
+    demandAuthorityId:number;
+    conditionOfItemId: number;
+    itemInspectionId:number;
+    sftDate: Date;
+    sftLetterNo:string;
+    workOrderNo: string;
+    workOrderDate: Date;
+    sftQty:number;
+    itemSerNo:string;
+    model:string;
+    brand: string;
+    warranty: string;
+    deliveryDate:Date;
+    inspectionDate: Date;
+    purchasePrice:string;
+    dateOfManufacture: Date;
+    acDocument: string;
+    arcDocument:string;
+    cofcDocument: string;
+    othersDocument: string;
+    sftRegPage:string;
+    acceptanceDocument:string;
+    docVerification: string;
+    sftStatus: boolean;
+    menuPosition:string;
+    isActive: boolean;
+   
+}

@@ -1,0 +1,305 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">{{pageTitle}}</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Preventive Maintenance</a>
+            </li>
+            <li class="breadcrumb-item active">{{destination}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="PreventiveMaintenanceForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+
+                <div *ngIf="role != userRole.User" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Department</mat-label>
+                      <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()" required>
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option  *ngFor="let code of selectedDepartmentNames" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('departmentNameId').hasError('required')">
+                          Select Any Department 
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+ 
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Equipment Name</mat-label>
+                    <mat-select formControlName="issueRegisterId"  required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option (onSelectionChange)="onEquipmentSelectionChange($event)"  *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="PreventiveMaintenanceForm.get('issueRegisterId').hasError('required')">
+                      Select Any Item Name
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <h5 class="m-t-20">PMS No : <span class="c-color">{{this.pmsNo}}</span> </h5>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Maintenance Category</mat-label>
+                      <mat-select formControlName="maintenanceTypeId" (selectionChange)="onCategorySelectionChange()"  required>
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option  *ngFor="let code of maintenenceTypes" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('maintenanceTypeId').hasError('required')">
+                          Select Any Maintenance Category 
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Maintenance Category</mat-label>
+                      <mat-select formControlName="maintenanceTypeId"  required>
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option (onSelectionChange)="onCategorySelectionChange($event)" *ngFor="let code of maintenenceTypes" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('maintenanceTypeId').hasError('required')">
+                          Select Any Maintenance Category 
+                      </mat-error>
+                  </mat-form-field>
+                </div> -->
+                <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Sub Category</mat-label>
+                      <mat-select formControlName="maintenanceCategoryId" required>
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option (onSelectionChange)="onSubCategorySelectionChange($event)"  *ngFor="let code of selectedMaintenanceCategory" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('maintenanceCategoryId').hasError('required')">
+                          Select Any Maintenance Sub Category 
+                      </mat-error>
+                  </mat-form-field>
+                </div>              -->
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Sub Category</mat-label>
+                      <mat-select formControlName="maintenanceCategoryId" required (selectionChange)="onSubCategorySelectionChange()">
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option   *ngFor="let code of selectedMaintenanceCategory" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('maintenanceCategoryId').hasError('required')">
+                          Select Any Maintenance Sub Category 
+                      </mat-error>
+                  </mat-form-field>
+                </div>          
+
+
+                  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                    <button class="btn-space"  mat-raised-button
+                    color="primary" routerLink="/maintenence-planning/preventivemaintenance-list"> Back
+                      <!-- <mat-icon class="col-white">add</mat-icon> -->
+                    </button>
+                    </div>
+                <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>JIC</mat-label>
+                      <mat-select formControlName="jobDescriptionEntryPmsId" (selectionChange)="onJobDescriptionEntryPmsId()" required>
+                        <mat-option  value="0">--Select--</mat-option >
+                          <mat-option   *ngFor="let code of selectedjic" [value]="code.value">
+                              {{code.text}}
+                            </mat-option>                          
+                      </mat-select>
+                      <mat-error *ngIf="PreventiveMaintenanceForm.get('jobDescriptionEntryPmsId').hasError('required')">
+                          Select Any JIC
+                      </mat-error>
+                  </mat-form-field>
+                </div>              -->
+               
+              </div>
+              <!-- <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" [disabled]="!PreventiveMaintenanceForm.valid " mat-raised-button
+                    color="primary">{{btnText}}</button>
+                </div>
+              </div> -->
+            </form>
+
+
+               <!-- Basic Table 1-->
+               <div *ngIf="isShownPreventiveList" class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 ex-mrk-entry-li">
+                  <div class="card">
+
+                    <div class="body table-responsive">
+                      <table class="table ex-mrk-entry issue-res">
+                        <thead>
+                          <tr>
+                            <th class="cl-srl">
+                              <h5>Ser</h5>
+                            </th>   
+
+                            <th class="cl-mrk">
+                              <h5>JIC</h5>
+                            </th>
+
+                            <th class="cl-mrk">
+                              <h5>Job Description</h5>
+                            </th>     
+
+                            <th class="cl-nm-rnk">
+                              <h5>By Whom</h5>
+                            </th>
+                            <th class="cl-mrk">
+                              <h5>Completed Date</h5>
+                            </th>
+                            <th class="cl-nm-rnk">
+                              <h5>Action</h5>
+                            </th>
+                          </tr>
+                        </thead>
+                            <tbody>
+                              <tr *ngFor="let unit of PreventiveMaintenanceForm.get('PreventiveList')['controls']; let i = index"
+                                [formGroup]="unit">
+                                <th class="cl-srl" scope="row">{{i+1}}</th>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'jic')}}
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'jobDescription')}}
+                                </td>
+                                <td class="cl-nm-rnk">
+                                  {{getControlLabel(i,'byWhom')}}
+                                </td>
+                                <!-- <td hidden class="cl-nm-rnk">
+                                  
+                                  {{getLabel(i,'issueRegisterId')}}
+                                </td> -->
+                              
+                                <td class="cl-mrk custom">
+                                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                    <input matInput [matDatepicker]="datepicker1" formControlName="completedDate">
+                                    <mat-datepicker-toggle matSuffix [for]="datepicker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #datepicker1></mat-datepicker>
+                                  </mat-form-field>
+                                </td>  
+                            
+                              <td class="cl-mrk">
+                                <!-- <button title="Completed" *ngIf="getControlLabel(i,'completedStatus') === 1"  class="btn-space custom" (click)="onCompletedButtonClick($event,unit)"><i class="fa fa-check"></i></button> 
+                                <button title="Not Completed" *ngIf="getControlLabel(i,'completedStatus') === 0" class="btn-space custom" (click)="onNotCompletedButtonClick($event,unit)"><i class="fa fa-exclamation-circle"></i></button>  -->
+                                <button title="Save"  class="btn-space custom-save" (click)="onNotCompletedButtonClick($event,unit)">Save</button>
+                                <!-- <button mat-icon-button color="accent" class="btn-tbl-edit">
+                                  <mat-icon aria-label="Edit" class="col-white"  [routerLink]="['/maintenence-planning/update-preventivemaintenance', getControlLabel(i,'preventiveMaintenanceId')]">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button color="accent" class="btn-tbl-delete" (click)="deleteItem(getControlLabel(i,'preventiveMaintenanceId'))" (click)="$event.stopPropagation()">
+                                  <mat-icon aria-label="Delete" class="col-white">delete</mat-icon> 
+                                </button> -->
+                              </td> 
+                            </tr>
+                         </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+     </div>
+
+
+                          <!-- Basic Table -->
+                          <!-- <div *ngIf="isShownPreventiveList" class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 ex-mrk-entry-li">
+                              <div class="card">
+            
+                                <div class="body table-responsive">
+                                  <table class="table ex-mrk-entry issue-res">
+                                    <thead>
+                                      <tr>
+                                        <th class="cl-srl">
+                                          <h5>Ser</h5>
+                                        </th>   
+
+                                        <th class="cl-mrk">
+                                          <h5>JIC</h5>
+                                        </th>
+
+                                        <th class="cl-mrk">
+                                          <h5>Job Description</h5>
+                                        </th>     
+            
+                                        <th class="cl-nm-rnk">
+                                          <h5>By Whom</h5>
+                                        </th>
+                                        <th class="cl-mrk">
+                                          <h5>Completed Date</h5>
+                                        </th>
+                                        <th class="cl-nm-rnk">
+                                          <h5>Action</h5>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                        <tbody>
+                                          <tr *ngFor="let unit of PreventiveMaintenanceForm.get('PreventiveList')['controls']; let i = index"
+                                            [formGroup]="unit">
+                                            <th class="cl-srl" scope="row">{{i+1}}</th>
+                                            <td class="cl-nm-rnk">
+                                              {{getControlLabel(i,'jic')}}
+                                            </td>
+                                            <td class="cl-nm-rnk">
+                                              {{getControlLabel(i,'jobDescription')}}
+                                            </td>
+                                            <td class="cl-nm-rnk">
+                                              {{getControlLabel(i,'byWhome')}}
+                                            </td>
+                                            <td class="cl-mrk custom">
+                                              <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                <input matInput [matDatepicker]="datepicker1" formControlName="completedDate">
+                                                <mat-datepicker-toggle matSuffix [for]="datepicker1"></mat-datepicker-toggle>
+                                                <mat-datepicker #datepicker1></mat-datepicker>
+                                              </mat-form-field>
+                                            </td>  
+                                        
+                                          <td class="cl-mrk">
+                                            <button title="Completed" *ngIf="getControlLabel(i,'completedStatus') === 1"  class="btn-space custom" (click)="onCompletedButtonClick($event,unit)"><i class="fa fa-check"></i></button> 
+                                            <button title="Not Completed" *ngIf="getControlLabel(i,'completedStatus') === 0" class="btn-space custom" (click)="onNotCompletedButtonClick($event,unit)"><i class="fa fa-exclamation-circle"></i></button> 
+                                            <button mat-icon-button color="accent" class="btn-tbl-edit">
+                                              <mat-icon aria-label="Edit" class="col-white"  [routerLink]="['/maintenence-planning/update-preventivemaintenance', getControlLabel(i,'preventiveMaintenanceId')]">edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button color="accent" class="btn-tbl-delete" (click)="deleteItem(getControlLabel(i,'preventiveMaintenanceId'))" (click)="$event.stopPropagation()">
+                                              <mat-icon aria-label="Delete" class="col-white">delete</mat-icon> 
+                                            </button>
+                                          </td> 
+                                        </tr>
+                                     </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                 </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

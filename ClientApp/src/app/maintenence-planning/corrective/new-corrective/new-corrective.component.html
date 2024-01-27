@@ -1,0 +1,390 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">{{pageTitle}}</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Corrective</a>
+            </li>
+            <li class="breadcrumb-item active">{{destination}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="CorrectiveForm" (ngSubmit)="onSubmit()">
+              <div class="row procurement-box">
+                <!-- <h4 class="align-center mb-2">Corrective Entry</h4> -->
+                <div *ngIf="role != userRole.User" class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Department</mat-label>
+                    <mat-select formControlName="departmentNameId" (selectionChange)="onDepartmentSelectionChange()"
+                      required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('departmentNameId').hasError('required')">
+                      Department  is Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Equipment Name</mat-label>
+                    <mat-select formControlName="issueRegisterId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option (onSelectionChange)="onEquipmentSelectionChange($event)" *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('issueRegisterId').hasError('required')">
+                      Equipment Name is Required! 
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <h5 class="m-t-20">Patt/Model : <span class="c-color">{{this.partNo}}</span> </h5>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Priority</mat-label>
+                    <mat-select formControlName="priorityId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option  *ngFor="let dropdown of selectedPriority" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('dateOfDefect').hasError('required')">
+                      Priority is Required! 
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Date of Defect</mat-label>
+                    <input matInput [matDatepicker]="dateOfDefectDatepicker" formControlName="dateOfDefect" required>
+                    <mat-datepicker-toggle matSuffix [for]="dateOfDefectDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateOfDefectDatepicker></mat-datepicker>
+                    <mat-error *ngIf="CorrectiveForm.get('dateOfDefect').hasError('required')">
+                      Date of Defect is Required! 
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Description of Defect</mat-label>
+                    <input matInput formControlName="descriptionOfDefect" required>
+                    <mat-error *ngIf="CorrectiveForm.get('descriptionOfDefect').hasError('required')">
+                      Description of Defect is Required! 
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Work Order No</mat-label>
+                    <input matInput formControlName="workOrderNo" required>
+                    <mat-error *ngIf="CorrectiveForm.get('workOrderNo').hasError('required')">
+                      Work Order No is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Work Order Date</mat-label>
+                    <input matInput [matDatepicker]="workOrderDateDatepicker" formControlName="workOrderDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="workOrderDateDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #workOrderDateDatepicker></mat-datepicker>
+                    <mat-error *ngIf="CorrectiveForm.get('workOrderDate').hasError('required')">
+                      Work Order Date is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Authority</mat-label>
+                    <mat-select formControlName="maintenanceAuthorityId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option  *ngFor="let dropdown of selectedMaintenenceAuthority" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('maintenanceAuthorityId').hasError('required')">
+                      Authority is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>By Whom</mat-label>
+                    <mat-select formControlName="byWhomId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option  *ngFor="let dropdown of selectedbyWhoms" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('byWhomId').hasError('required')">
+                      By Whom is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Work Start Date</mat-label>
+                    <input matInput [matDatepicker]="workStartDateDatepicker" formControlName="workStartDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="workStartDateDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #workStartDateDatepicker></mat-datepicker>
+                    <mat-error *ngIf="CorrectiveForm.get('workStartDate').hasError('required')">
+                      By Whom is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Status of Job</mat-label>
+                    <mat-select formControlName="statusOfJobId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option  *ngFor="let dropdown of selectedStatusOfJob" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('statusOfJobId').hasError('required')">
+                      Status of Job is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Spare Req.</mat-label>
+                    <mat-select formControlName="spareRequisitionId" required>
+                      <mat-option value="0">--Select--</mat-option>
+                      <mat-option  *ngFor="let dropdown of selectedSpareRequisition" [value]="dropdown.value">
+                        {{dropdown.text}}
+                      </mat-option>
+                      <!-- <mat-option value="">--Select--</mat-option>
+                      <mat-option value="1">Yes</mat-option>
+                      <mat-option value="0">No</mat-option> -->
+                    </mat-select>
+                    <mat-error *ngIf="CorrectiveForm.get('spareRequisitionId').hasError('required')">
+                      Spare Req is Required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Ref Documents</mat-label>
+                    <ngx-mat-file-input (change)="onFileChanged($event)"
+                      accept=".txt,.pdf,.xls,.xlsx,.doc,.docx,.ppt,.pptx">
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>attachment</mat-icon>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+
+              <br>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" [disabled]="!CorrectiveForm.valid " mat-raised-button
+                    color="primary">{{btnText}}</button>
+                </div>
+              </div>
+            </form>
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <ul class="header-buttons-left ml-0">
+
+                      <li class="dropdown">
+                        <input placeholder="Search" type="text" [(ngModel)]="searchText" #filter
+                          class="browser-default search-field" aria-label="Search box">
+                      </li>
+                      <li>
+                        <div class="icon-button-demo m-l-10">
+                          <button mat-mini-fab (click)="applyFilter(searchText)" color="accent">
+                            <mat-icon class="col-white">search</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                    <ul class="header-buttons-left ml-0">
+                      <li><h3 class="text-center table-title">List of Corrective Maintenance</h3></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="container">
+
+              <!-- Basic Table -->
+              <div *ngIf="isShown" class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 ex-mrk-entry-li">
+                  <div class="card">
+
+                    <div class="body table-responsive">
+                      <table class="table ex-mrk-entry issue-res">
+                        <thead>
+                          <tr>
+                            <th class="cl-srl">
+                              <h5>Ser</h5>
+                            </th>   
+
+                            <th class="cl-mrk">
+                              <h5>Equipment Name</h5>
+                            </th>     
+
+                            <th class="cl-mrk">
+                              <h5>Date of Defect</h5>
+                            </th>
+                            <th class="cl-nm-rnk">
+                              <h5>Description of Defect</h5>
+                            </th>
+                            <th class="cl-mrk">
+                              <h5>Work Order No</h5>
+                            </th>
+
+                            <th class="cl-mrk">
+                              <h5>Work Start Date</h5>
+                            </th>
+                            <th class="cl-mrk">
+                              <h5>Status of Job</h5>
+                            </th>
+
+                            <th class="cl-nm-rnk">
+                              <h5>Spare Stock</h5>
+                            </th>
+                            <th class="cl-nm-rnk">
+                              <h5>Ref : Doc</h5>
+                            </th>
+                            <th class="cl-nm-rnk">
+                              <h5>Work Completed Date</h5>
+                            </th>
+                            <th class="cl-nm-rnk">
+                              <h5>Action</h5>
+                            </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr *ngFor="let unit of CorrectiveForm.get('ItemStoreList')['controls']; let i = index"
+                                                  [formGroup]="unit">
+                                                  <th class="cl-srl" scope="row">{{i+1}}</th>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'itemName')}}
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'dateOfDefect') |  date:'dd/MM/yyyy'}}
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'descriptionOfDefect')}}
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'workOrderNo')}}
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'workStartDate') |  date:'dd/MM/yyyy'}}
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    {{getControlLabel(i,'statusOfJob')}}
+                                                  </td>
+                                                 
+                
+                                                  <td>
+                                                    <button *ngIf="getControlLabel(i,'spareRequisitionId') === 1" class="btn-space custom" (click)="onSpareStockButtonClick($event,unit)"><i class="fa fa-eye"></i></button> 
+                                                    <span *ngIf="getControlLabel(i,'spareRequisitionId') === 2">N/A</span>
+                                                  </td>
+                                                  <td class="cl-nm-rnk">
+                                                    <mat-lebel *ngIf="getControlLabel(i,'refDocument')"><a target="_blank" [href]="getControlLabel(i,'refDocument')"><mat-icon>picture_as_pdf</mat-icon></a></mat-lebel>
+                                                    <!-- {{getControlLabel(i,'refDocument')}} -->
+                                                  </td>
+                                                  
+                                                  <td class="cl-mrk custom">
+                                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                      <input matInput [matDatepicker]="datepicker" formControlName="workCompletedDate">
+                                                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                                                      <mat-datepicker #datepicker></mat-datepicker>
+                                                    </mat-form-field>
+                                                  </td>                                
+                                                <td class="cl-mrk">
+                                                  <!-- {{getControlLabel(i,'completedStatus')}} -->
+                                                   <button title="Completed" *ngIf="getControlLabel(i,'completedStatus') === 1" class="btn-space custom" (click)="onCompletedButtonClick($event,unit)"><i class="fa fa-check"></i></button> 
+                                                   <!-- <button class="btn-space" mat-raised-button color="primary" (click)="onButtonClick($event,unit)">Completed</button> -->
+                                                   <button  title="Not Completed" *ngIf="getControlLabel(i,'completedStatus') === 0" class="btn-space custom" (click)="onNotCompletedButtonClick($event,unit)"><i class="fa fa-exclamation-circle"></i></button> 
+                                                   <button mat-icon-button color="accent" class="btn-tbl-edit">
+                                                     <mat-icon aria-label="Edit" class="col-white"  [routerLink]="['/maintenence-planning/update-corrective', getControlLabel(i,'correctiveMaintenenceId')]">edit</mat-icon>
+                                                   </button>
+                                                   <button mat-icon-button color="accent" class="btn-tbl-delete" (click)="deleteItem(getControlLabel(i,'correctiveMaintenenceId'))"  (click)="$event.stopPropagation()">
+                                                     <mat-icon aria-label="Delete" class="col-white">delete</mat-icon> 
+                                                   </button>
+                                                </td> 
+                
+                                                       <!-- <td class="cl-mrk">
+                                                    <input type="checkbox" formControlName="isChecked" #checkBox
+                                                      [(ngModel)]="unit.isChecked" (change)="onCheckboxChange($event,unit)"
+                                                      [ngClass]="'tbl-checkbox'">
+                                                  </td>                              -->
+                                                </tr>
+                    
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                    
+                                      <div class="row" *ngIf="isDynamicFormShown">
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                                          <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Issue Date</mat-label>
+                                            <input matInput [matDatepicker]="dateOfTenderFloatpicker" formControlName="issueDate" required>
+                                            <mat-datepicker-toggle matSuffix [for]="dateOfTenderFloatpicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #dateOfTenderFloatpicker></mat-datepicker>
+                                            <mat-error *ngIf="IssueRegisterForm.get('issueDate').hasError('required')">
+                                              Issue Date is Required
+                                            </mat-error>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                                          <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Issued To</mat-label>
+                                            <input matInput formControlName="issuedTo">
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                                          <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Issued By</mat-label>
+                                            <input matInput formControlName="issuedBy">
+                                          </mat-form-field>
+                                        </div>
+                                        
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 mb-2">
+                                          <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                            <mat-label>Remarks</mat-label>
+                                            <input matInput formControlName="remarks">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </div>

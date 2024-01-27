@@ -1,0 +1,23 @@
+export interface Survey {
+    surveyItemId: number,
+    denoId: number,
+    itemStatusId: number,
+    itemDetailId: number,
+    qty: string,
+    surveyNo: string,
+    nsdSrNo: string,
+    byWhom:string,
+    surveyDate: Date,
+    itemSerNo: string,
+    surveyDocument: string,
+    demandNo: string,
+    returnStore: string,
+    menuPosition: number,
+    isActive: boolean,
+    unitId: number,
+    departmentNameId: number,
+    itemCategoryId: number,
+    equipmentNameId: number,
+    surveyAuthorityId: number,
+    surveyItemTypeId: number
+}

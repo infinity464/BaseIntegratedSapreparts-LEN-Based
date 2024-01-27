@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ali">
+    <div class="row right-row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="row">
+          <div
+            class="container col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 mt-2 sticky-table ex-mrk-li pro-top-list">
+
+            <h4 class="align-center">Spare Stock Information</h4>
+            <mat-table #table [dataSource]="spareStockBySpRequest" matSort class="mat-cell ex-mrk-lft-tbl">
+
+              <ng-container matColumnDef="sl">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Ser. </mat-header-cell>
+                <mat-cell *matCellDef="let element; let i = index;"> {{ ((paging.pageIndex-1) *
+                  paging.pageSize) + i+1}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="nameOfItem">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Item Name</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.nameOfItem}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="availableQty">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Qty</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.availableQty}}
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+
+            <div mat-dialog-actions class="mb-1">
+              <button mat-flat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>

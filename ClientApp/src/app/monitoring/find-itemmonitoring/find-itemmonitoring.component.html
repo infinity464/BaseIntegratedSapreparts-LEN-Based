@@ -1,0 +1,165 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Survey Item Monitoring</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main"><i class="fas fa-home"></i></a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Survey Item Monitoring</a>
+            </li>
+            <!-- <li class="breadcrumb-item active">Find</li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form class="m-4" [formGroup]="ItemDetailForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 mb-2">
+                  <div class="row">
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Unit </mat-label>
+                        <mat-select formControlName="unitId"  (selectionChange)="getSelectedDepartmentNameByUnitId()">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of baseSchoolNameList" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('unitId').hasError('required')">
+                          Unit is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div *ngIf="role != userRole.User" class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <mat-select formControlName="departmentNameId" >
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option   *ngFor="let dropdown of selectedDepartmentNames" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('departmentNameId').hasError('required')">
+                          Department  is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Item Category</mat-label>
+                        <mat-select formControlName="itemCategoryId"  (selectionChange)="onItemCategorySelectionChange()">
+                          <mat-option value="0">--Select--</mat-option>
+                          
+                          <mat-option   *ngFor="let dropdown of selectedItemCategory" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ItemDetailForm.get('itemCategoryId').hasError('required')">
+                          Item Category is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>  
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Equipment Name</mat-label>
+                        <mat-select formControlName="equipmentNameId">
+                          <mat-option value="0">--Select--</mat-option>
+                          <mat-option *ngFor="let dropdown of selectedEquipment" [value]="dropdown.value">
+                            {{dropdown.text}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div *ngIf="isButtonShow" class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                      <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> 
+                        <mat-icon class="col-white">print</mat-icon>
+                      </button>
+                    </div>
+                    
+                    <div *ngIf="role == userRole.SuperAdmin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/main']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                    <div *ngIf="role == userRole.User" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/user-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                    <div *ngIf="role == userRole.Admin" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 b">
+                      <button class="back" [routerLink]="['/admin/dashboard/admin-dashboard']" mat-raised-button> <mat-icon>keyboard_backspace</mat-icon> Back</button>
+                    </div>
+                  </div>                  
+                </div>
+                <!-- <div *ngIf="isButtonShow" class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                  <button class="btn-space"  mat-raised-button color="primary">Find</button>
+                </div>
+                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 m-t-5">
+                  <button class="btn-space"  mat-raised-button color="primary" (click)="printSingle()"> 
+                    <mat-icon class="col-white">print</mat-icon>
+                  </button> 
+                </div>-->
+                                
+              </div>
+            </form>
+
+            <div *ngIf="isShown" class="row create-table db-tbl cls-rtn">
+              <h3 class="text-center table-title">Survey Item Monitoring List</h3>
+              <div class="container">
+                <div *ngIf="isNoDataFound">
+                  <h3>No Data Found</h3>
+                </div>
+                <div id="print-routine">
+                <table class="table  tbl-by-group">
+                  <thead>
+                    <tr>
+                      <th class="course-name-col"><h5>Unit Name</h5></th>
+                      <th class="course-name-col"><h5>Department Name</h5></th>
+                      <th class="course-name-col"><h5>Item Name</h5></th>
+                      <th class="cl-mrk"><h5>Survey Date</h5></th>
+                      <th class="cl-mrk"><h5>Survey Status </h5></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let data of groupArrays;let i= index;">
+                      <tr>
+                        <td class="cl-srl" [attr.rowspan]="data.demands.length + 1">{{data.departmentName}}</td>
+                      </tr>
+                      <tr *ngFor="let number of data.demands;">
+                        <td>
+                          {{number.schoolName1}}
+                        </td>
+                        <td>
+                          {{number.nameOfItem}}_{{number.toolsLocationName}}
+                        </td>
+                        <td>
+                          {{number.surveyDate|  date:'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                          
+                          <span class="att-completed" *ngIf="number.demandCompleteStatus == 1">Complete</span>
+                          <span  class="att-due" *ngIf="number.demandCompleteStatus != 1">Pending</span>
+                        </td>
+                        
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
